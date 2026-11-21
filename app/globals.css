@@ -3,11 +3,11 @@
 :root {
   --graphite: #060a14;
   --iron: #0c1220;
-  --seam: #1b2742;
-  --chalk: #eaf0fb;
-  --dust: #8a97b3;
-  --cobalt: #38b0ff;
-  --cobalt-deep: #1d6dff;
+  --seam: #1f2d4d;
+  --chalk: #f7faff;
+  --dust: #9fb0cf;
+  --cobalt: #31c6ff;
+  --cobalt-deep: #1b7dff;
 }
 
 @theme inline {
@@ -35,27 +35,41 @@ body {
     radial-gradient(1000px 640px at -5% 105%, rgba(50, 110, 240, 0.234), transparent 62%),
     #0b142b;
   background-attachment: fixed;
+  overflow-x: clip;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2a3a60 transparent;
 }
 
 ::selection {
   background: color-mix(in srgb, var(--cobalt) 35%, transparent);
 }
 
-:focus-visible {
-  outline: 2px solid var(--cobalt);
-  outline-offset: 2px;
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--cobalt);
+    outline-offset: 2px;
+  }
 }
 
 /* Frosted card, the building block for the whole UI */
 .glass {
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.02));
-  border: 1px solid rgba(120, 170, 255, 0.16);
+  background: linear-gradient(160deg, rgba(150, 180, 225, 0.11), rgba(90, 115, 165, 0.05));
+  border: 1px solid rgba(140, 195, 255, 0.22);
   border-radius: 20px;
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.07),
-    0 18px 50px -28px rgba(20, 100, 255, 0.55);
+    inset 0 1px 0 rgba(190, 230, 255, 0.16),
+    0 18px 50px -30px rgba(20, 120, 255, 0.5);
+  transition:
+    border-color 200ms ease,
+    box-shadow 200ms ease;
+}
+.glass:hover {
+  border-color: rgba(49, 198, 255, 0.4);
 }
 
 /* Progress segments that light up */
@@ -70,11 +84,11 @@ body {
 }
 .seg-on {
   background: linear-gradient(180deg, #7fdcff, var(--cobalt-deep));
-  box-shadow: 0 0 12px rgba(56, 176, 255, 0.75);
+  box-shadow: 0 0 10px rgba(49, 198, 255, 0.5);
 }
 
 .icon-glow {
-  filter: drop-shadow(0 0 10px rgba(56, 176, 255, 0.55));
+  filter: drop-shadow(0 0 8px rgba(49, 198, 255, 0.4));
 }
 
 /* The new rank icon pops once when a level is reached */
@@ -119,6 +133,8 @@ body {
 .prose-coach {
   line-height: 1.65;
   max-width: 62ch;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 .prose-coach > * + * {
   margin-top: 0.8em;
@@ -160,6 +176,9 @@ body {
   font-weight: 600;
 }
 .prose-coach table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
   border-collapse: collapse;
   font-size: 0.9rem;
 }

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { LogoMark, MountainScene } from "./Mountain";
 
 type Msg = { id: string; role: "user" | "coach"; text: string };
@@ -101,7 +102,7 @@ export default function Chat({ onCoachReply }: { onCoachReply: () => void }) {
 
   return (
     <section
-      className="relative isolate flex h-full min-h-0 flex-col overflow-hidden max-[900px]:h-dvh"
+      className="relative isolate flex h-full min-h-0 min-w-0 flex-col overflow-hidden max-[900px]:h-dvh"
       aria-label="Chat with your coach"
     >
       <div
@@ -116,22 +117,28 @@ export default function Chat({ onCoachReply }: { onCoachReply: () => void }) {
         <MountainScene className="size-full" />
       </div>
 
-      <header className="flex items-center justify-between px-8 py-5">
-        <div className="flex items-center gap-3">
-          <LogoMark className="h-11 w-auto" />
-          <span className="font-display text-2xl font-semibold tracking-tight">Coachly</span>
+      <header className="flex items-center justify-between gap-3 px-6 py-4 sm:px-8 sm:py-5">
+        <div className="flex min-w-0 items-center gap-3">
+          <LogoMark className="h-11 w-auto shrink-0" />
+          <span className="font-display truncate text-2xl font-semibold tracking-tight">Coachly</span>
         </div>
         <button
           onClick={newChat}
           disabled={empty}
-          className="glass !rounded-full px-4 py-1.5 text-sm text-dust transition-colors hover:text-chalk disabled:pointer-events-none disabled:opacity-40"
+          className="glass !rounded-full px-4 py-1.5 text-sm text-dust transition-colors duration-200 hover:text-chalk disabled:pointer-events-none disabled:opacity-40"
         >
           New chat
         </button>
       </header>
 
-      <div className="min-h-0 flex-1 overflow-y-auto px-8">
-        <div className="mx-auto flex max-w-[44rem] flex-col gap-8 pb-6">
+      <div
+        className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto px-6 sm:px-8"
+        style={{
+          maskImage: "linear-gradient(to bottom, transparent, black 18px, black calc(100% - 28px), transparent)",
+          WebkitMaskImage: "linear-gradient(to bottom, transparent, black 18px, black calc(100% - 28px), transparent)",
+        }}
+      >
+        <div className="mx-auto flex max-w-[44rem] flex-col gap-8 py-4 pb-8">
           {empty && (
             <div className="pt-[14vh]">
               <h1 className="font-display text-4xl font-semibold tracking-tight">What are we training today?</h1>
@@ -144,7 +151,7 @@ export default function Chat({ onCoachReply }: { onCoachReply: () => void }) {
           {messages.map((m) =>
             m.role === "user" ? (
               <div key={m.id} className="flex justify-end">
-                <p className="max-w-[80%] whitespace-pre-wrap rounded-2xl border border-cobalt/25 bg-cobalt/10 px-4 py-2.5 leading-relaxed shadow-[0_0_24px_-12px_rgba(56,176,255,0.8)]">
+                <p className="max-w-[80%] whitespace-pre-wrap rounded-2xl border border-cobalt/25 bg-cobalt/10 px-4 py-2.5 leading-relaxed [overflow-wrap:anywhere] shadow-[0_0_18px_-12px_rgba(49,198,255,0.7)]">
                   {m.text}
                 </p>
               </div>
@@ -152,7 +159,7 @@ export default function Chat({ onCoachReply }: { onCoachReply: () => void }) {
               <div key={m.id} className="flex gap-3">
                 <LogoMark className="mt-0.5 h-7 w-auto shrink-0" />
                 <div className="prose-coach">
-                  <ReactMarkdown>{m.text}</ReactMarkdown>
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.text}</ReactMarkdown>
                 </div>
               </div>
             ),
@@ -181,13 +188,13 @@ export default function Chat({ onCoachReply }: { onCoachReply: () => void }) {
         </div>
       </div>
 
-      <div className="px-8 pt-2 pb-7">
+      <div className="relative z-10 px-6 pt-2 pb-5 sm:px-8 sm:pb-7">
         <form
           onSubmit={(e) => {
             e.preventDefault();
             send();
           }}
-          className="glass mx-auto flex max-w-[44rem] items-end gap-3 px-4 py-3 transition-shadow focus-within:shadow-[0_0_0_1px_rgba(56,176,255,0.55),0_0_30px_-8px_rgba(56,176,255,0.7)]"
+          className="glass mx-auto flex max-w-[44rem] items-end gap-3 px-4 py-3 transition-shadow focus-within:border-cobalt/60 focus-within:shadow-[0_0_0_1px_rgba(49,198,255,0.5),0_0_22px_-10px_rgba(49,198,255,0.6)]"
         >
           <textarea
             ref={inputRef}
@@ -207,12 +214,13 @@ export default function Chat({ onCoachReply }: { onCoachReply: () => void }) {
                 send();
               }
             }}
-            className="max-h-[180px] flex-1 resize-none bg-transparent leading-relaxed outline-none placeholder:text-dust"
+            style={{ outline: "none" }}
+            className="max-h-[180px] min-w-0 flex-1 resize-none bg-transparent leading-relaxed outline-none placeholder:text-dust"
           />
           <button
             type="submit"
             disabled={!draft.trim() || loading}
-            className="rounded-lg bg-gradient-to-b from-[#6fd6ff] to-cobalt-deep px-4 py-1.5 text-sm font-medium text-[#04101f] shadow-[0_0_18px_rgba(56,176,255,0.55)] transition-opacity disabled:opacity-30 disabled:shadow-none"
+            className="rounded-lg bg-gradient-to-b from-[#6fd6ff] to-cobalt-deep px-4 py-1.5 text-sm font-medium text-[#04101f] shadow-[0_0_14px_rgba(49,198,255,0.4)] transition duration-200 hover:brightness-110 disabled:opacity-30 disabled:shadow-none disabled:hover:brightness-100"
           >
             Send
           </button>
